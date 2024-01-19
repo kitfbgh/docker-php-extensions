@@ -12,3 +12,4 @@ Required library
 | - | - | - |
 | Alpine | libstdc++ | [link](./examples/grpc/Dockerfile.alpine) |
 | Debian | libstdc++6 | [link](./examples/grpc/Dockerfile.debian) |
+| Ubuntu | libstdc++6 | [link](./examples/grpc/Dockerfile.ubuntu) |

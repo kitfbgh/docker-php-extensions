@@ -1,6 +1,7 @@
-ARG BASE_TAG=8.2-cli-alpine3.19
+ARG OS_VERSION=3.18
+ARG PHP_VERSION=8.2
 
-FROM php:${BASE_TAG} AS builder
+FROM php:${PHP_VERSION}-cli-alpine${OS_VERSION} AS builder
 
 ARG VERSION=1.60.0
 

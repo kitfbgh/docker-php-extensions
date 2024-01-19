@@ -45,23 +45,7 @@ jobs:
         target_tag+=$ext-
         target_tag+=$ext_version
 
-        case "$os" in
-          alpine)
-            folder="extensions/$ext/php"
-            base_tag="$php_version-cli-$os$os_version"
-            ;;
-          debian)
-            folder="extensions/$ext/php"
-            base_tag="$php_version-cli-$os_version"
-            ;;
-          ubuntu)
-            folder="extensions/$ext/ubuntu"
-            base_tag="$os_version"
-            ;;
-          *) echo "Invalid os: '$os'"; exit 1;;
-        esac
-
-        for var in os os_version php_version ext ext_version base_tag folder target_tag; do
+        for var in os os_version php_version ext ext_version target_tag; do
           if [ -z "${!var}" ]; then
             echo "Invalid tag format: '$input' missing '$var'"
             exit 1
@@ -78,9 +62,9 @@ jobs:
     - name: Build
       uses: docker/build-push-action@v3
       with:
-        context: ${{ steps.v.outputs.folder }}/.
+        context: extensions/${{ steps.v.outputs.ext }}/${{ steps.v.outputs.os }}/.
         build-args: |
-          BASE_TAG=${{ steps.v.outputs.base_tag }}
+          OS_VERSION=${{ steps.v.outputs.os_version }}
           PHP_VERSION=${{ steps.v.outputs.php_version }}
           VERSION=${{steps.v.outputs.ext_version}}
         tags: ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.target_tag }}

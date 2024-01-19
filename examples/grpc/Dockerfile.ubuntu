@@ -5,5 +5,10 @@ COPY --from=shuehchoulu/php-extensions:8.2-ubuntu-20.04-grpc-1.60.0 /grpc.so /gr
 RUN apt update; \
     apt install -y software-properties-common; \
     add-apt-repository -y ppa:ondrej/php; \
-    apt-get install -y --no-install-recommends php8.2 libstdc++6; \
-    mv /grpc.so /usr/local/lib/php/extensions/no-debug-non-zts-20220819/grpc.so
+    # Ubuntu already has libstdc++6 installed, but it's a dependency for GRPC anyway.
+    apt-get install -y --no-install-recommends php8.2 libstdc++6
+
+RUN mv /grpc.so /usr/lib/php/20220829/grpc.so; \
+    printf '\nextension=grpc.so\n' >> /etc/php/8.2/cli/php.ini
+
+RUN php -r 'use Grpc\Timeval; var_dump(Timeval::now());'

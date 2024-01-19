@@ -9,6 +9,7 @@ ARG VERSION=1.60.0
 RUN apt update && apt install -y software-properties-common && add-apt-repository -y ppa:ondrej/php
 RUN apt-get install -y --no-install-recommends \
     php${PHP_VERSION} \
+    php-dev \
     php-pear \
     autoconf \
     zlib1g-dev \
@@ -16,7 +17,7 @@ RUN apt-get install -y --no-install-recommends \
     g++
 
 # Install
-RUN MAKEFLAGS="-j $(nproc)" pecl install grpc
+RUN MAKEFLAGS="-j $(nproc)" pecl install grpc-${VERSION}
 
 FROM scratch
 

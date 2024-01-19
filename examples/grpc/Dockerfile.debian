@@ -1,0 +1,7 @@
+FROM php:8.2-cli-bullseye
+
+COPY --from=shuehchoulu/php-extensions:8.2-debian-bullseye-grpc-1.60.0 /grpc.so /grpc.so
+
+RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6; \
+    mv /grpc.so $(php-config --extension-dir)/grpc.so; \
+    docker-php-ext-enable grpc.so

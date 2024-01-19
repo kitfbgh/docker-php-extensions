@@ -62,7 +62,8 @@ jobs:
     - name: Build
       uses: docker/build-push-action@v3
       with:
-        context: extensions/${{ steps.v.outputs.ext }}/${{ steps.v.outputs.os }}/.
+        file: Dockerfile.${{ steps.v.outputs.os }}
+        context: extensions/${{ steps.v.outputs.ext }}/.
         build-args: |
           OS_VERSION=${{ steps.v.outputs.os_version }}
           PHP_VERSION=${{ steps.v.outputs.php_version }}

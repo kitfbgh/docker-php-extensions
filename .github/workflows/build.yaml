@@ -70,8 +70,8 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
+        # ${{ vars.DOCKER_HUB_REPO }}
         images: |
-          ${{ vars.DOCKER_HUB_REPO }}
           ghcr.io/${{ github.repository }}
         tags: |
           ${{ steps.v.outputs.target_tag }}

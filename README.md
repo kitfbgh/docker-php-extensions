@@ -1,6 +1,8 @@
 # docker-php-extensions
 
-Pre-compiled extension for PHP at [DockerHub](https://hub.docker.com/r/shuehchoulu/php-extensions).
+Pre-compiled extension for PHP at
+[DockerHub](https://hub.docker.com/r/shuehchoulu/php-extensions) and
+[GitHub Packages](https://github.com/evan361425/docker-php-extensions/pkgs/container/docker-php-extensions).
 
 Image tags naming pattern are:
 

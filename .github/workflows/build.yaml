@@ -21,12 +21,6 @@ jobs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 
-    - name: Log in to Docker
-      uses: docker/login-action@v2
-      with:
-        username: ${{ vars.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-
     - name: Get vars
       id: v
       run: |
@@ -59,6 +53,39 @@ jobs:
         key: ${{ steps.v.outputs.target_tag }}
         restore-keys: ${{ steps.v.outputs.php_version }}-${{steps.v.outputs.os}}-${{steps.v.outputs.os_version}}-
 
+    - name: Log in to Docker
+      uses: docker/login-action@v2
+      with:
+        username: ${{ vars.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+    - name: Log in to GHCR
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ vars.DOCKER_HUB_REPO }}
+          ghcr.io/${{ github.repository }}
+        tags: |
+          ${{ steps.v.outputs.target_tag }}
+        labels: |
+          org.opencontainers.image.title="PHP pure ${{ steps.v.outputs.ext }} extension"
+          org.opencontainers.image.description="PHP@${{ steps.v.outputs.php_version }} ${{ steps.v.outputs.ext }}@${{ steps.v.outputs.ext_version }} on ${{ steps.v.outputs.os }}@${{ steps.v.outputs.os_version }}"
+          org.opencontainers.image.version="${{ steps.v.outputs.ext_version }}"
+
+    - run: |
+        cat <<EOF
+        ${{ steps.meta.outputs.tags }}
+        ${{ steps.meta.outputs.labels }}
+        EOF
+
     - name: Build
       uses: docker/build-push-action@v3
       with:
@@ -68,7 +95,8 @@ jobs:
           OS_VERSION=${{ steps.v.outputs.os_version }}
           PHP_VERSION=${{ steps.v.outputs.php_version }}
           VERSION=${{steps.v.outputs.ext_version}}
-        tags: ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.target_tag }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         platforms: "linux/amd64"
         push: true
         cache-to: type=local,dest=/tmp/.buildx-cache-new

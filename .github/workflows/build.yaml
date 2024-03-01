@@ -8,6 +8,9 @@ on:
         description: "Publish as tag push"
         required: true
 
+permissions:
+  packages: write
+
 jobs:
   build:
     name: "Build image"

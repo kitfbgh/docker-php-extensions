@@ -18,7 +18,8 @@ ${PHP_VERSION}-${OS}-${OS_VERSION}-${EXTENSION_NAME}-${EXTENSION_VERSION}
 
 Exists packages:
 
--   [grpc](#grpc)
+- [grpc](#grpc)
+- opentelemetry
 
 ## GRPC
 

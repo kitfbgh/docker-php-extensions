@@ -71,8 +71,8 @@ jobs:
     - name: Seperate OS version
       id: v
       run: |
-        echo "os_name=$(echo ${{ matrix.os }} | cut -d '-' -f1)" | tee -a $GITHUB_ENV
-        echo "os_version=$(echo ${{ matrix.os }} | cut -d '-' -f2-)" | tee -a $GITHUB_ENV
+        echo "os_name=$(echo ${{ matrix.os }} | cut -d '-' -f1)" | tee -a $GITHUB_OUTPUT
+        echo "os_version=$(echo ${{ matrix.os }} | cut -d '-' -f2-)" | tee -a $GITHUB_OUTPUT
 
     - name: Set up buildx
       uses: docker/setup-buildx-action@v3

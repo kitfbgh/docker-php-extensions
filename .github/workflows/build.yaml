@@ -1,3 +1,4 @@
+name: Build Images
 on:
   push:
     paths:
@@ -119,6 +120,7 @@ jobs:
         ${{ steps.meta.outputs.labels }}
         EOF
 
+    - uses: actions/checkout@v4
     - name: Build
       uses: docker/build-push-action@v3
       with:

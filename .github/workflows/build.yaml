@@ -32,9 +32,6 @@ on:
         - 'debian-bullseye'
         - 'ubuntu-20.04'
 
-permissions:
-  packages: write
-
 jobs:
   matrix:
     name: Prepare Matrix
@@ -66,6 +63,9 @@ jobs:
     name: Prepare Images
     runs-on: ubuntu-latest
     needs: matrix
+    permissions:
+      packages: write
+      contents: write
     strategy:
       matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
@@ -74,6 +74,7 @@ jobs:
       run: |
         echo "os_name=$(echo ${{ matrix.os }} | cut -d '-' -f1)" | tee -a $GITHUB_OUTPUT
         echo "os_version=$(echo ${{ matrix.os }} | cut -d '-' -f2-)" | tee -a $GITHUB_OUTPUT
+        echo "tag=${{ matrix.php }}-${{ matrix.os }}-${{ matrix.ext }}-${{ matrix.ver }}" | tee -a $GITHUB_OUTPUT
 
     - name: Set up buildx
       uses: docker/setup-buildx-action@v3
@@ -105,24 +106,16 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         # ${{ vars.DOCKER_HUB_REPO }}
-        images: |
-          ghcr.io/${{ github.repository }}
-        tags: |
-          ${{ matrix.php }}-${{ matrix.os }}-${{ matrix.ext }}-${{ matrix.ver }}
+        images: ghcr.io/${{ github.repository }}
+        tags: ${{ steps.v.outputs.tag }}
         labels: |
           org.opencontainers.image.title="Pre-compiled ${{ matrix.ext }} extension for PHP."
           org.opencontainers.image.description="${{ matrix.ext }} extensions for PHP${{ matrix.php }} in ${{ matrix.os }}."
           org.opencontainers.image.version="${{ matrix.ver }}"
 
-    - run: |
-        cat <<EOF
-        ${{ steps.meta.outputs.tags }}
-        ${{ steps.meta.outputs.labels }}
-        EOF
-
     - uses: actions/checkout@v4
     - name: Build
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v6
       with:
         file: extensions/${{ matrix.ext }}/Dockerfile.${{ steps.v.outputs.os_name }}
         context: extensions/${{ matrix.ext }}/.
@@ -136,6 +129,10 @@ jobs:
         push: true
         cache-to: type=local,dest=/tmp/.buildx-cache-new
         cache-from: type=local,src=/tmp/.buildx-cache
+    - name: Push to Docker Hub
+      run: |
+        docker tag ${{ steps.meta.outputs.tags }} ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.tag }}
+        docker push ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.tag }}
 
     - name: Record history
       run: |

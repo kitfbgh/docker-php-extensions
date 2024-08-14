@@ -123,16 +123,12 @@ jobs:
           OS_VERSION=${{ steps.v.outputs.os_version }}
           PHP_VERSION=${{ matrix.php }}
           VERSION=${{ matrix.ver }}
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }},${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.tag }}
         labels: ${{ steps.meta.outputs.labels }}
         platforms: "linux/amd64"
         push: true
         cache-to: type=local,dest=/tmp/.buildx-cache-new
         cache-from: type=local,src=/tmp/.buildx-cache
-    - name: Push to Docker Hub
-      run: |
-        docker tag ${{ steps.meta.outputs.tags }} ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.tag }}
-        docker push ${{ vars.DOCKER_HUB_REPO }}:${{ steps.v.outputs.tag }}
 
     - name: Record history
       run: |

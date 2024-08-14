@@ -12,7 +12,7 @@
   },
   "8.3": {
     "grpc": {
-      "latest": "1.65.3",
+      "latest": "1.65.2",
       "1.65.2": ["alpine-3.18", "debian-bullseye", "ubuntu-20.04"]
     },
     "opentelemetry": {

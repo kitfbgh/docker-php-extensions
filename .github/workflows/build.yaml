@@ -138,10 +138,11 @@ jobs:
           --arg at $(date -u '+%Y-%m-%dT%TZ') \
           '{"createdAt":$at,"triggerBy":$by}' \
           > "history/${{ matrix.php }}/${{ matrix.ext }}/${{ matrix.ver }}/${{ matrix.os }}.json"
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: EndBug/add-and-commit@v9
       with:
-        commit_message: "chore: record ${{ matrix.php }}-${{ matrix.os }}-${{ matrix.ext }}-${{ matrix.ver }}"
-        file_pattern: "history/*.json"
+        pull: '--rebase'
+        message: "chore: record ${{ matrix.php }}-${{ matrix.os }}-${{ matrix.ext }}-${{ matrix.ver }}"
+        add: "history"
 
     - name: Replace cache  # temp fix for https://github.com/docker/build-push-action/issues/252 & https://github.com/moby/buildkit/issues/1896.
       run: rm -rf /tmp/.buildx-cache && mv /tmp/.buildx-cache-new /tmp/.buildx-cache

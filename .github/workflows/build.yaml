@@ -144,7 +144,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: record
         run: |
-          echo '${{ needs.matrix.outputs.matrix }}' | jq -cr '.[]' | while read -r item; do
+          echo '${{ needs.matrix.outputs.matrix }}' | jq -cr '.include[]' | while read -r item; do
             mkdir -p "history/$(echo "$item" | jq -r '.php + "/" + .ext + "/" + .ver')"
             jq -cn \
               --arg by evan361425 \
@@ -154,9 +154,6 @@ jobs:
           done
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: |
-            chore: record history
-
-            ${{ needs.matrix.outputs.matrix }}
+          commit_message: 'chore: record history'
           file_pattern: "history/*.json"
       

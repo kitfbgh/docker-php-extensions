@@ -19,6 +19,8 @@ on:
         options:
         - 'grpc'
         - 'opentelemetry'
+        - 'mongodb'
+        - 'redis'
       ver:
         description: "Extension version"
         required: true

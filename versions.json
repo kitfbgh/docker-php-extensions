@@ -9,6 +9,10 @@
     "opentelemetry": {
       "latest": "1.0.3",
       "1.0.3": ["alpine-3.18", "debian-bullseye", "ubuntu-20.04"]
+    },
+    "mongodb": {
+      "latest": "1.19.3",
+      "1.19.3": ["alpine-3.18"]
     }
   },
   "8.3": {

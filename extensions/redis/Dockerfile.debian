@@ -1,0 +1,27 @@
+ARG OS_VERSION=bullseye
+ARG PHP_VERSION=8.2
+
+FROM php:${PHP_VERSION}-cli-${OS_VERSION} AS builder
+
+ARG VERSION=1.0.0
+
+# Unpack source
+RUN docker-php-source extract
+
+# Download
+RUN mkdir -p /usr/src/php/ext/redis && \
+      apt-get update && \
+      apt-get install -y --no-install-recommends \
+            wget \
+            zlib1g-dev \
+            binutils && \
+      wget -O /tmp/redis.tgz https://pecl.php.net/get/redis-${VERSION}.tgz && \
+      tar -C /usr/src/php/ext/redis -xf /tmp/redis.tgz --strip-components=1 && \
+      rm -rf /var/lib/apt/lists/*
+
+# Install
+RUN docker-php-ext-install --jobs $(nproc) redis
+
+FROM scratch
+
+COPY --from=builder /usr/local/lib/php/extensions/no-debug-non-zts-*/redis.so /redis.so

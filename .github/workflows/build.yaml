@@ -154,6 +154,7 @@ jobs:
               '{"createdAt":$at,"triggerBy":$by}' \
               > "history/$(echo "$item" | jq -r '.php + "/" + .ext + "/" + .ver + "/" + .os').json"
           done
+          git pull
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: record history'

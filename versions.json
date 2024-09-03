@@ -16,8 +16,8 @@
     },
     "redis": {
       "latest": "1.19.3",
-      "6.0.2": ["alpine-3.18", "debian-bullseye"],
-      "5.3.7": ["alpine-3.18", "debian-bullseye"]
+      "6.0.2": ["alpine-3.18", "debian-bullseye", "ubuntu-20.04"],
+      "5.3.7": ["alpine-3.18", "debian-bullseye", "ubuntu-20.04"]
     }
   },
   "8.3": {

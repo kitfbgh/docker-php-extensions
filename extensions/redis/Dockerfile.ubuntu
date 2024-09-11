@@ -7,7 +7,7 @@ ARG VERSION=1.0.0
 
 # Download
 RUN apt update && apt install -y software-properties-common && add-apt-repository -y ppa:ondrej/php
-RUN apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     php${PHP_VERSION} \
     php${PHP_VERSION}-dev \
     php-pear \

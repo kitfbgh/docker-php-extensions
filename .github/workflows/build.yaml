@@ -9,9 +9,11 @@ on:
         description: "PHP Version"
         required: true
         type: choice
-        default: '8.2'
+        default: '8.4'
         options:
         - '8.2'
+        - '8.3'
+        - '8.4'
       ext:
         description: "Extension name"
         required: true
@@ -31,8 +33,10 @@ on:
         type: choice
         options:
         - 'alpine-3.18'
-        - 'debian-bullseye'
+        - 'alpine-3.21'
         - 'ubuntu-20.04'
+        - 'ubuntu-22.04'
+        - 'ubuntu-24.04'
 
 jobs:
   matrix:
